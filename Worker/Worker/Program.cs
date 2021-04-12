@@ -9,20 +9,29 @@ namespace Worker
     {
         static void Main(string[] args)
         {
-            //to run the docker image
-            //docker run -it --rm --name rabbitmq -p 5672:5672
-            //and to run managment tool
-            //docker run -p 15672:15672 rabbitmq:3-management
+            //befor start run the docker image
+            //docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+            
+            //configure connection
             var factory = new ConnectionFactory(){ HostName = "localhost"};
             using (var connection = factory.CreateConnection())
+            //open channel connection
             using (var channel = connection.CreateModel())
             {
+                //declare the queue
+                //name - rpc_queue
+                //client have to connect to the queue with the same name
                 channel.QueueDeclare(queue: "rpc_queue", durable: false,
                   exclusive: false, autoDelete: false, arguments: null);
+
+                //add queue options
                 channel.BasicQos(0, 1, false);
+
+                //define consumer fore the channel
                 var consumer = new EventingBasicConsumer(channel);
                 channel.BasicConsume(queue: "rpc_queue",
                   autoAck: false, consumer: consumer);
+
                 Console.WriteLine(" [x] Awaiting RPC requests");
 
                 consumer.Received += (model, ea) =>
