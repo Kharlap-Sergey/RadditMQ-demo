@@ -23,13 +23,6 @@ D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\scopedcss\bundle\Asp.s
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.TagHelpers.input.cache
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.TagHelpers.output.cache
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.RazorCoreGenerate.cache
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\Error.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\Index.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\Privacy.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_Layout.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_ValidationScriptsPartial.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\_ViewImports.cshtml.g.cs
-D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Pages\_ViewStart.cshtml.g.cs
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.RazorTargetAssemblyInfo.cache
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.RazorTargetAssemblyInfo.cs
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.Views.pdb
@@ -37,3 +30,4 @@ D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.csproj.CopyComplet
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.dll
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.pdb
 D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Asp.genruntimeconfig.cache
+D:\Projects\RabbitMQ-demo\Asp\Asp\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
