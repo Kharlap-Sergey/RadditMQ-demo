@@ -1,0 +1,16 @@
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.exe
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.deps.json
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.runtimeconfig.json
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.runtimeconfig.dev.json
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.dll
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\Worker.pdb
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\RabbitMQ.Client.dll
+D:\Projects\RabbitMQ-demo\Worker\Worker\bin\Debug\netcoreapp3.1\System.Threading.Channels.dll
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.csprojAssemblyReference.cache
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.AssemblyInfoInputs.cache
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.AssemblyInfo.cs
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.csproj.CoreCompileInputs.cache
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.csproj.CopyComplete
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.dll
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.pdb
+D:\Projects\RabbitMQ-demo\Worker\Worker\obj\Debug\netcoreapp3.1\Worker.genruntimeconfig.cache
