@@ -14,23 +14,32 @@ namespace Worker
             );
 
         private IModel channel;
+        private IConnection connection;
         private readonly string requestQueueName;
-        private readonly string responseQueueName;
         private readonly RequestHandler RequestExecuter;
 
         public RpcServer(
             RequestHandler handler,
-            string requestQueueName = "rpc_queue",
-            string responseQueueName = "rpc_queue"
+            string requestQueueName = "rpc_queue"
             )
         {
             this.requestQueueName = requestQueueName;
-            this.responseQueueName = responseQueueName;
             this.RequestExecuter = handler;
 
             this.StartListening();
         }
 
+        ~RpcServer()
+        {
+            this.channel.Dispose();
+            this.connection.Dispose();
+        }
+
+        public void Stop()
+        {
+            this.channel.Close();
+            this.connection.Close();
+        }
         private void StartListening(
         )
         {
@@ -38,36 +47,36 @@ namespace Worker
             {
                 HostName = "localhost"
             };
-            using (var connection = factory.CreateConnection())
+
+            this.connection = factory.CreateConnection();
             //open channel connection
-            using (this.channel = connection.CreateModel())
-            {
-                //declare the queue
-                //name - rpc_queue
-                //client have to be connected to the queue with the name
-                channel.QueueDeclare(
-                    queue: this.requestQueueName,
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null
-                    );
+            this.channel = connection.CreateModel();
+            //declare the queue
+            //default name - rpc_queue
+            //client has to be connected to the queue with the same name
+            channel.QueueDeclare(
+                queue: this.requestQueueName,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+                );
 
-                //add queue options
-                //channel.BasicQos(0, 1, false);
+            //define consumer fore the channel
+            var consumer = new EventingBasicConsumer(channel);
+            //bind consumer to the queue
+            channel.BasicConsume(
+                queue: this.requestQueueName,
+                autoAck: false,
+                consumer: consumer
+                );
 
-                //define consumer fore the channel
-                var consumer = new EventingBasicConsumer(channel);
-                channel.BasicConsume(
-                    queue: this.requestQueueName,
-                    autoAck: false,
-                    consumer: consumer
-                    );
-
-                consumer.Received += this.HandleReceiving;
-            }
+            consumer.Received += this.HandleReceiving;
         }
-        private void HandleReceiving(object sender, BasicDeliverEventArgs e)
+        private void HandleReceiving(
+            object sender, 
+            BasicDeliverEventArgs e
+            )
         {
             var response = this.RequestExecuter?.Invoke(sender, e);
 
@@ -78,21 +87,11 @@ namespace Worker
                 IBasicProperties eventProps
             )
         {
-            //channel.QueueDeclare(
-            //    queue: this.responseQueueName, 
-            //    durable: false,
-            //    exclusive: false, 
-            //    autoDelete: false, 
-            //    arguments: null);
-
             channel.BasicPublish(
                 exchange: "",
                 routingKey: eventProps.ReplyTo,
                 basicProperties: eventProps,
-                body: response);
-
-            //channel.BasicAck(deliveryTag: ea.DeliveryTag,
-            //  multiple: false);
+                body: response);;
         }
     }
 }
