@@ -12,13 +12,19 @@ namespace Asp
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
+        private readonly BlockingCollection<byte[]> respQueue 
+            = new BlockingCollection<byte[]>();
         private readonly IBasicProperties props;
 
-        public RpcClient()
-        {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+        private event EventHandler<BasicDeliverEventArgs> receivingHandler;
 
+        public RpcClient(
+            EventHandler<BasicDeliverEventArgs> receivingHandler
+            )
+        {
+            this.receivingHandler += receivingHandler;
+
+            var factory = new ConnectionFactory() { HostName = "localhost" };
             this.connection = factory.CreateConnection();
             this.channel = connection.CreateModel();
             this.replyQueueName = channel.QueueDeclare().QueueName;
@@ -29,18 +35,18 @@ namespace Asp
             this.props.CorrelationId = correlationId;
             this.props.ReplyTo = replyQueueName;
 
-            this.consumer.Received += (model, ea) =>
+            this.consumer.Received += (model, eventargs) =>
             {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
+                var body = eventargs.Body.ToArray();
+                if (eventargs.BasicProperties.CorrelationId == correlationId)
                 {
-                    this.respQueue.Add(response);
+                    this.receivingHandler?.Invoke(model, eventargs);
+                    this.respQueue.Add(body);
                 }
             };
         }
 
-        public string Call(string message)
+        public byte[] Call(string message)
         {
             var messageBytes = Encoding.UTF8.GetBytes(message);
             this.channel.BasicPublish(
