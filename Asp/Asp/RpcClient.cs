@@ -40,7 +40,7 @@ namespace Asp
                 var body = eventargs.Body.ToArray();
                 if (eventargs.BasicProperties.CorrelationId == correlationId)
                 {
-                    this.receivingHandler?.Invoke(model, eventargs);
+                    //this.receivingHandler?.Invoke(model, eventargs);
                     this.respQueue.Add(body);
                 }
             };

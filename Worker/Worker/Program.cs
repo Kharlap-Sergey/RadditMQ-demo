@@ -9,11 +9,12 @@ namespace Worker
     {
         static void Main(string[] args)
         {
+            //var server = new RpcServer(ExecuteAnsver);
             //befor start run the docker image
             //docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-            
+
             //configure connection
-            var factory = new ConnectionFactory(){ HostName = "localhost"};
+            var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             //open channel connection
             using (var channel = connection.CreateModel())
@@ -31,8 +32,6 @@ namespace Worker
                 var consumer = new EventingBasicConsumer(channel);
                 channel.BasicConsume(queue: "rpc_queue",
                   autoAck: false, consumer: consumer);
-
-                Console.WriteLine(" [x] Awaiting RPC requests");
 
                 consumer.Received += (model, ea) =>
                 {
@@ -52,7 +51,6 @@ namespace Worker
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(" [.] " + e.Message);
                         response = "";
                     }
                     finally
@@ -64,12 +62,17 @@ namespace Worker
                           multiple: false);
                     }
                 };
-
-                Console.WriteLine(" Press [enter] to exit.");
-                Console.ReadLine();
             }
         }
 
+        private static byte[] ExecuteAnsver(object o, BasicDeliverEventArgs args)
+        {
+            var body = args.Body.ToArray();
+            var request = Encoding.UTF8.GetString(body);
+            int n = int.Parse(request);
+
+            return Encoding.UTF8.GetBytes(fib(n).ToString());
+        }
         private static int fib(int n)
         {
             if (n == 0 || n == 1)
@@ -78,6 +81,11 @@ namespace Worker
             }
 
             return fib(n - 1) + fib(n - 2);
+        }
+
+         private static void Listen()
+        {
+            
         }
     }
 }
