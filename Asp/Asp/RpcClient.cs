@@ -12,17 +12,20 @@ namespace Asp
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<byte[]> respQueue 
+        private readonly BlockingCollection<byte[]> responseQueue 
             = new BlockingCollection<byte[]>();
         private readonly IBasicProperties props;
-
+        private readonly string requestQueueName;
+        private readonly string correlationId;
         private event EventHandler<BasicDeliverEventArgs> receivingHandler;
 
         public RpcClient(
-            EventHandler<BasicDeliverEventArgs> receivingHandler
+            EventHandler<BasicDeliverEventArgs> receivingHandler,
+            string requestQueueName = "rpc_queue"
             )
         {
             this.receivingHandler += receivingHandler;
+            this.requestQueueName = requestQueueName;
 
             var factory = new ConnectionFactory() { HostName = "localhost" };
             this.connection = factory.CreateConnection();
@@ -31,27 +34,24 @@ namespace Asp
             this.consumer = new EventingBasicConsumer(channel);
 
             this.props= channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            this.props.CorrelationId = correlationId;
+            this.correlationId = Guid.NewGuid().ToString();
+            this.props.CorrelationId = this.correlationId;
             this.props.ReplyTo = replyQueueName;
 
-            this.consumer.Received += (model, eventargs) =>
-            {
-                var body = eventargs.Body.ToArray();
-                if (eventargs.BasicProperties.CorrelationId == correlationId)
-                {
-                    //this.receivingHandler?.Invoke(model, eventargs);
-                    this.respQueue.Add(body);
-                }
-            };
+            this.consumer.Received += HandleReceiving;
         }
 
+        ~RpcClient()
+        {
+            this.connection.Dispose();
+            this.channel.Dispose();
+        }
         public byte[] Call(string message)
         {
             var messageBytes = Encoding.UTF8.GetBytes(message);
             this.channel.BasicPublish(
                 exchange: "",
-                routingKey: "rpc_queue",
+                routingKey: this.requestQueueName,
                 basicProperties: this.props,
                 body: messageBytes);
 
@@ -60,12 +60,25 @@ namespace Asp
                 queue: this.replyQueueName,
                 autoAck: true);
 
-            return this.respQueue.Take();
+            return this.responseQueue.Take();
         }
-
         public void Close()
         {
-            connection.Close();
+            this.channel.Close();
+            this.connection.Close();
         }
+        private void HandleReceiving(
+            object sender,
+            BasicDeliverEventArgs e
+            )
+        {
+            var body = e.Body.ToArray();
+            if (e.BasicProperties.CorrelationId == this.correlationId)
+            {
+                this.receivingHandler?.Invoke(sender, e);
+                this.responseQueue.Add(body);
+            }
+        }
+        
     }
 }
