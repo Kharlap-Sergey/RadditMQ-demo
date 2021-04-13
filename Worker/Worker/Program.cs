@@ -20,7 +20,7 @@ namespace Worker
             {
                 //declare the queue
                 //name - rpc_queue
-                //client have to connect to the queue with the same name
+                //client have to be connected to the queue with the name
                 channel.QueueDeclare(queue: "rpc_queue", durable: false,
                   exclusive: false, autoDelete: false, arguments: null);
 
